@@ -1,6 +1,5 @@
 package com.vargancys.vargancysnews.module;
 
-import android.animation.AnimatorSet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;

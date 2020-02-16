@@ -5,6 +5,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 
 import com.trello.rxlifecycle.components.RxActivity;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -15,7 +16,7 @@ import butterknife.Unbinder;
  * time  : 2020/02/14
  * version:1.0
  */
-public abstract class BaseActivity extends RxActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
     private Unbinder bind;
 
     @LayoutRes
