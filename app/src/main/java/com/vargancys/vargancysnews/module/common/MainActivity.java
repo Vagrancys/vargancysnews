@@ -34,4 +34,18 @@ public class MainActivity extends BaseActivity {
         ft.replace(R.id.fl_left_content,new LeftMenuFragment(),LEFTMENU_TAG);
         ft.commit();
     }
+
+    public LeftMenuFragment getLeftMenuFragment(){
+        //FragmentManager fm = getSupportFragmentManager();
+        //LeftMenuFragment leftMenuFragment = (LeftMenuFragment) fm.findFragmentByTag(LEFTMENU_TAG);
+        return (LeftMenuFragment) getSupportFragmentManager().findFragmentByTag(LEFTMENU_TAG);
+    }
+
+    public void getDrawerToggle(){
+        drawerLayout.closeDrawers();
+    }
+
+    public ContentFragment getContentFragment(){
+        return (ContentFragment) getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT_TAG);
+    }
 }

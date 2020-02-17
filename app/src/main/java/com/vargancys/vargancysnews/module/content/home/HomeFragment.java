@@ -2,6 +2,7 @@ package com.vargancys.vargancysnews.module.content.home;
 
 import android.view.View;
 
+import com.vargancys.vargancysnews.R;
 import com.vargancys.vargancysnews.base.BaseFragment;
 
 /**
@@ -17,7 +18,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public int getLayoutId() {
-        return 0;
+        return R.layout.fragment_home;
     }
 
     @Override

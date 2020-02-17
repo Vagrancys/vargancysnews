@@ -1,5 +1,6 @@
 package com.vargancys.vargancysnews.module.common.fragment;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -9,6 +10,7 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.vargancys.vargancysnews.R;
 import com.vargancys.vargancysnews.base.BaseFragment;
 import com.vargancys.vargancysnews.module.common.adapter.ContentAdapter;
+import com.vargancys.vargancysnews.module.content.news.NewsFragment;
 
 import java.util.ArrayList;
 
@@ -126,5 +128,9 @@ public class ContentFragment extends BaseFragment {
         public String getTabTitle() {
             return Title;
         }
+    }
+
+    public NewsFragment getNewsFragment(){
+        return (NewsFragment) contentAdapter.getItem(1);
     }
 }
