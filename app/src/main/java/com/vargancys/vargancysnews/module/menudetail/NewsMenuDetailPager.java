@@ -2,12 +2,16 @@ package com.vargancys.vargancysnews.module.menudetail;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.vargancys.vargancysnews.R;
 import com.vargancys.vargancysnews.base.MenuDetailBasePager;
+
+import butterknife.BindView;
 
 /**
  * author: Vagrancy
@@ -16,19 +20,20 @@ import com.vargancys.vargancysnews.base.MenuDetailBasePager;
  * version:1.0
  */
 public class NewsMenuDetailPager extends MenuDetailBasePager {
-    private TextView textView;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
     public NewsMenuDetailPager(Context context){
         super(context);
     }
 
     @Override
-    public View initView() {
-        textView = new TextView(mContext);
-        textView.setText("新闻");
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.YELLOW);
-        textView.setTextSize(25);
-        return textView;
+    public int getLayoutId() {
+        return R.layout.newsmenu_detail_pager;
+    }
+
+    @Override
+    public void initView() {
+
     }
 
     @Override
