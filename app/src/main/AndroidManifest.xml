@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".module.common.MainActivity">
+        <activity android:name=".module.common.MainActivity"
+            android:theme="@style/Theme.PageIndicatorDefaults">
 
         </activity>
         <activity android:name=".module.common.GuideActivity"/>

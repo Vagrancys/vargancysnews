@@ -82,7 +82,7 @@ public class NewsFragment extends BaseFragment {
         //得到左侧菜单
         LeftMenuFragment leftMenuFragment = mainActivity.getLeftMenuFragment();
         detailBasePagers = new ArrayList<>();
-        detailBasePagers.add(new NewsMenuDetailPager(context));
+        detailBasePagers.add(new NewsMenuDetailPager(context,news.get(0)));
         detailBasePagers.add(new TopicMenuDetailPager(context));
         detailBasePagers.add(new PhotoMenuDetailPager(context));
         detailBasePagers.add(new InteracMenuDetailPager(context));

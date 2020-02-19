@@ -41,7 +41,7 @@ public class NewsDataInfo {
         private String title;
         private int type;
         private int id;
-        private ArrayList<children> children;
+        private ArrayList<Children> children;
 
         public String getTitle() {
             return title;
@@ -51,7 +51,7 @@ public class NewsDataInfo {
             this.title = title;
         }
 
-        public ArrayList<News.children> getChildren() {
+        public ArrayList<News.Children> getChildren() {
             return children;
         }
 
@@ -63,7 +63,7 @@ public class NewsDataInfo {
             return id;
         }
 
-        public void setChildren(ArrayList<News.children> children) {
+        public void setChildren(ArrayList<News.Children> children) {
             this.children = children;
         }
 
@@ -75,7 +75,7 @@ public class NewsDataInfo {
             this.type = type;
         }
 
-        public class children{
+        public class Children{
             private int id;
             private String title;
             private int type;
