@@ -24,6 +24,8 @@ import com.vargancys.vargancysnews.module.menudetail.domain.TabDetailPagerBean;
 import com.vargancys.vargancysnews.utils.CacheUtils;
 import com.vargancys.vargancysnews.utils.Constants;
 import com.vargancys.vargancysnews.utils.DensityUtils;
+import com.vargancys.vargancysnews.view.HorizontalScrollViewPager;
+import com.vargancys.vargancysnews.view.RefreshListView;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -41,11 +43,11 @@ import butterknife.BindView;
  */
 public class TabDetailPager extends MenuDetailBasePager {
     @BindView(R.id.view_pager)
-    ViewPager viewPager;
+    HorizontalScrollViewPager viewPager;
     @BindView(R.id.ll_point_group)
     LinearLayout llPointGroup;
     @BindView(R.id.list_view)
-    ListView ListView;
+    RefreshListView ListView;
     @BindView(R.id.banner_title)
     TextView bannerTitle;
     private static final String TAG = "TabDetailPager";

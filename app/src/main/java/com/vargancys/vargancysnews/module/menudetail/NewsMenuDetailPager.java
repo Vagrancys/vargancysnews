@@ -131,4 +131,5 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
             return children.get(position).getTitle();
         }
     }
+
 }
