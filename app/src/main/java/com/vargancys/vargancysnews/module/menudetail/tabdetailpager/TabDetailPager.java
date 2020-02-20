@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -50,12 +51,15 @@ public class TabDetailPager extends MenuDetailBasePager {
     RefreshListView ListView;
     @BindView(R.id.banner_title)
     TextView bannerTitle;
+    private String moreUrl;
     private static final String TAG = "TabDetailPager";
     private final NewsDataInfo.News.Children children;
     private List<TabDetailPagerBean.DataEntity.Topnews> topnews;
     private TabDetailPagerListAdapter mAdapter;
     private List<TabDetailPagerBean.DataEntity.News> news;
     private String url;
+    private boolean isLoadMore = false;
+
     public TabDetailPager(Context context,NewsDataInfo.News.Children children) {
         super(context);
         this.children = children;
@@ -81,17 +85,20 @@ public class TabDetailPager extends MenuDetailBasePager {
 
     private void getDataFromNet(){
         RequestParams params = new RequestParams(url);
+        params.setConnectTimeout(4000);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 CacheUtils.putString(mContext,url,result);
                 Log.e(TAG,children.getTitle()+"页面数据请求成功=="+result);
                 processData(result);
+                ListView.onRefreshFinish(true);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
                 Log.e(TAG,children.getTitle()+"页面数据请求onCancelled=="+cex.getMessage());
+                ListView.onRefreshFinish(false);
             }
 
             @Override
@@ -112,22 +119,88 @@ public class TabDetailPager extends MenuDetailBasePager {
         Log.e("tab","url"+children.getUri());
         View topNewsView = View.inflate(mContext,R.layout.item_top_news,null);
 
-        ListView.addHeaderView(topNewsView);
+        //ListView.addHeaderView(topNewsView);
+        ListView.addTopHeaderView(topNewsView);
+        ListView.setOnRefreshListener(new MyOnRefreshListener());
+    }
+
+    class MyOnRefreshListener implements RefreshListView.OnRefreshListener{
+        @Override
+        public void onPullDownRefresh() {
+            getDataFromNet();
+        }
+
+        @Override
+        public void onLoadMore() {
+            if(TextUtils.isEmpty(moreUrl)){
+                Toast.makeText(mContext,"没有数据",Toast.LENGTH_SHORT).show();
+                ListView.onMoreFinish();
+            }else{
+                getMoreDataFromNet();
+            }
+
+        }
+    }
+
+    private void getMoreDataFromNet() {
+        RequestParams params = new RequestParams(moreUrl);
+        params.setConnectTimeout(4000);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.e(TAG,children.getTitle()+"加载更多联网成功=="+result);
+                isLoadMore = true;
+                processData(result);
+                ListView.onMoreFinish();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e(TAG,children.getTitle()+"加载更多联网onCancelled=="+cex.getMessage());
+                ListView.onMoreFinish();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.e(TAG,children.getTitle()+"加载更多联网失败=="+ex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e(TAG,children.getTitle()+"加载更多联网onFinished==");
+            }
+        });
     }
 
     private void processData(String json){
         TabDetailPagerBean bean = parsedJson(json);
         Log.e(TAG,"解析成功=="+bean.getData().getNews().get(0).getTitle());
-        topnews = bean.getData().getTopicnews();
-        viewPager.setAdapter(new TabDetailPagerTopicNewsAdapter());
+        moreUrl = bean.getData().getMore();
+        if(TextUtils.isEmpty(moreUrl)){
+            moreUrl = "";
+        }else {
+            moreUrl = Constants.BASE_URI + moreUrl;
+        }
 
-        addPoint();
-        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
-        bannerTitle.setText(topnews.get(0).getTitle());
+        if(!isLoadMore){
+            topnews = bean.getData().getTopicnews();
+            viewPager.setAdapter(new TabDetailPagerTopicNewsAdapter());
 
-        news = bean.getData().getNews();
+            addPoint();
+            viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+            bannerTitle.setText(topnews.get(0).getTitle());
 
-        ListView.setAdapter(new TabDetailPagerListAdapter());
+            news = bean.getData().getNews();
+
+            ListView.setAdapter(new TabDetailPagerListAdapter());
+        }else{
+            isLoadMore = false;
+            //List<TabDetailPagerBean.DataEntity.News> moreNews = bean.getData().getNews();
+            news.addAll(bean.getData().getNews());
+            mAdapter.notifyDataSetChanged();
+        }
+
+
     }
 
     class TabDetailPagerListAdapter extends BaseAdapter{
