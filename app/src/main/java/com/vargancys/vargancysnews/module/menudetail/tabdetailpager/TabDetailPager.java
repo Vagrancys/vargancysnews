@@ -1,6 +1,8 @@
 package com.vargancys.vargancysnews.module.menudetail.tabdetailpager;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -9,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.vargancys.vargancysnews.R;
 import com.vargancys.vargancysnews.base.MenuDetailBasePager;
+import com.vargancys.vargancysnews.module.common.NewsDetailActivity;
 import com.vargancys.vargancysnews.module.content.news.api.NewsDataInfo;
 import com.vargancys.vargancysnews.module.menudetail.domain.TabDetailPagerBean;
 import com.vargancys.vargancysnews.utils.CacheUtils;
@@ -43,6 +47,7 @@ import butterknife.BindView;
  * version:1.0
  */
 public class TabDetailPager extends MenuDetailBasePager {
+    public static final String READ_ARRAY_ID = "read_array_id";
     @BindView(R.id.view_pager)
     HorizontalScrollViewPager viewPager;
     @BindView(R.id.ll_point_group)
@@ -121,7 +126,27 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         //ListView.addHeaderView(topNewsView);
         ListView.addTopHeaderView(topNewsView);
+
         ListView.setOnRefreshListener(new MyOnRefreshListener());
+        ListView.setOnItemClickListener(new MyOnItemClickListener());
+    }
+
+    class MyOnItemClickListener implements AdapterView.OnItemClickListener{
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            int realPosition = position - 1;
+            TabDetailPagerBean.DataEntity.News newsData = news.get(realPosition);
+            //Toast.makeText(mContext,"id = "+newsData.getId(),Toast.LENGTH_SHORT).show();
+            String idArray = CacheUtils.getString(mContext, READ_ARRAY_ID);
+            if(!idArray.contains(newsData.getId()+"")){
+                CacheUtils.putString(mContext,READ_ARRAY_ID,idArray+newsData.getId()+",");
+                mAdapter.notifyDataSetChanged();//getCount() ->getView();
+            }
+
+            Intent intent = new Intent(mContext, NewsDetailActivity.class);
+            intent.putExtra("url",Constants.BASE_URI+newsData.getUrl());
+            mContext.startActivity(intent);
+        }
     }
 
     class MyOnRefreshListener implements RefreshListView.OnRefreshListener{
@@ -191,8 +216,8 @@ public class TabDetailPager extends MenuDetailBasePager {
             bannerTitle.setText(topnews.get(0).getTitle());
 
             news = bean.getData().getNews();
-
-            ListView.setAdapter(new TabDetailPagerListAdapter());
+            mAdapter = new TabDetailPagerListAdapter();
+            ListView.setAdapter(mAdapter);
         }else{
             isLoadMore = false;
             //List<TabDetailPagerBean.DataEntity.News> moreNews = bean.getData().getNews();
@@ -238,6 +263,12 @@ public class TabDetailPager extends MenuDetailBasePager {
             Glide.with(mContext).load(url).into(viewHolder.iv_icon);
             viewHolder.tv_title.setText(newsData.getTitle());
             viewHolder.tv_time.setText(newsData.getPubdate());
+            String idArray = CacheUtils.getString(mContext,READ_ARRAY_ID);
+            if(idArray.contains(newsData.getId()+"")){
+                viewHolder.tv_title.setTextColor(Color.GRAY);
+            }else{
+                viewHolder.tv_title.setTextColor(Color.BLACK);
+            }
             return convertView;
         }
     }
