@@ -84,7 +84,7 @@ public class NewsFragment extends BaseFragment {
         detailBasePagers = new ArrayList<>();
         detailBasePagers.add(new NewsMenuDetailPager(context,news.get(0)));
         detailBasePagers.add(new TopicMenuDetailPager(context));
-        detailBasePagers.add(new PhotoMenuDetailPager(context));
+        detailBasePagers.add(new PhotoMenuDetailPager(context,news.get(2)));
         detailBasePagers.add(new InteracMenuDetailPager(context));
         //把数据存进左侧菜单
         leftMenuFragment.setData(news);

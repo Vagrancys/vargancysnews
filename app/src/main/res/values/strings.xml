@@ -2,4 +2,5 @@
     <string name="app_name">流浪新闻</string>
     <string name="guide_title">开始体验</string>
     <string name="item_left_title">新闻</string>
+    <string name="photo_title">组图</string>
 </resources>

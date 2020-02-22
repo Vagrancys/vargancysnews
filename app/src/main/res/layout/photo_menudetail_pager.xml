@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/red"
+        android:padding="@dimen/margin_size_10dp">
+        <TextView
+            android:id="@+id/photo_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/photo_title"
+            android:textSize="@dimen/text_size_24sp"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"/>
+        <ImageView
+            android:id="@+id/photo_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/photo_grid_normal"/>
+    </RelativeLayout>
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
@@ -11,5 +33,6 @@
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:cacheColorHint="@android:color/transparent"/>
-</FrameLayout>
+        android:cacheColorHint="@android:color/transparent"
+        android:visibility="gone"/>
+</LinearLayout>
