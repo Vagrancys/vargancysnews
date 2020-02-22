@@ -3,12 +3,15 @@ package com.vargancys.vargancysnews.module.menudetail.tabdetailpager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -64,6 +67,8 @@ public class TabDetailPager extends MenuDetailBasePager {
     private List<TabDetailPagerBean.DataEntity.News> news;
     private String url;
     private boolean isLoadMore = false;
+    private InternalHandler internalHandler;
+    private boolean isDragging;
 
     public TabDetailPager(Context context,NewsDataInfo.News.Children children) {
         super(context);
@@ -225,7 +230,20 @@ public class TabDetailPager extends MenuDetailBasePager {
             mAdapter.notifyDataSetChanged();
         }
 
+        if(internalHandler !=null){
+            internalHandler = new InternalHandler();
+        }
 
+        //把消息队列所有的消息和回调移除
+        internalHandler.removeCallbacksAndMessages(null);
+        internalHandler.postDelayed(new MyRunnable(),4000);
+    }
+
+    class MyRunnable implements Runnable{
+        @Override
+        public void run() {
+            internalHandler.sendEmptyMessageDelayed(0,4000);
+        }
     }
 
     class TabDetailPagerListAdapter extends BaseAdapter{
@@ -300,7 +318,18 @@ public class TabDetailPager extends MenuDetailBasePager {
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener{
         @Override
         public void onPageScrollStateChanged(int i) {
-
+            if(i == ViewPager.SCROLL_STATE_DRAGGING){
+                isDragging = true;
+                internalHandler.removeCallbacksAndMessages(null);
+            }else if(i == ViewPager.SCROLL_STATE_SETTLING){
+                isDragging = false;
+                internalHandler.removeCallbacksAndMessages(null);
+                internalHandler.postDelayed(new MyRunnable(),4000);
+            }else if(i == ViewPager.SCROLL_STATE_IDLE){
+                isDragging = false;
+                internalHandler.removeCallbacksAndMessages(null);
+                internalHandler.postDelayed(new MyRunnable(),4000);
+            }
         }
 
         @Override
@@ -326,6 +355,20 @@ public class TabDetailPager extends MenuDetailBasePager {
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Glide.with(mContext).load(Constants.BASE_URI+topnews.get(position).getTopimage())
             .into(imageView);
+            imageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            internalHandler.removeCallbacksAndMessages(null);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            internalHandler.postDelayed(new MyRunnable(),4000);
+                            break;
+                    }
+                    return true;
+                }
+            });
             container.addView(imageView);
             return imageView;
         }
@@ -351,4 +394,13 @@ public class TabDetailPager extends MenuDetailBasePager {
         return new Gson().fromJson(json,TabDetailPagerBean.class);
     }
 
+    class InternalHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int item = (viewPager.getCurrentItem()+1)%topnews.size();
+            viewPager.setCurrentItem(item);
+            internalHandler.postDelayed(new MyRunnable(),4000);
+        }
+    }
 }

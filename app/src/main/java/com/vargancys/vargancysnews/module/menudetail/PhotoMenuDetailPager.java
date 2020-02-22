@@ -5,9 +5,14 @@ import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.vargancys.vargancysnews.R;
 import com.vargancys.vargancysnews.base.MenuDetailBasePager;
+
+import butterknife.BindView;
 
 /**
  * author: Vagrancy
@@ -16,19 +21,23 @@ import com.vargancys.vargancysnews.base.MenuDetailBasePager;
  * version:1.0
  */
 public class PhotoMenuDetailPager extends MenuDetailBasePager {
-    private TextView textView;
+    @BindView(R.id.listView)
+    ListView listView;
+    @BindView(R.id.gridView)
+    GridView gridView;
+
     public PhotoMenuDetailPager(Context context){
         super(context);
     }
 
     @Override
-    public View initView() {
-        textView = new TextView(mContext);
-        textView.setText("图片");
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.YELLOW);
-        textView.setTextSize(25);
-        return textView;
+    public int getLayoutId() {
+        return R.layout.photo_menudetail_pager;
+    }
+
+    @Override
+    public void initView() {
+
     }
 
     @Override
