@@ -85,7 +85,7 @@ public class NewsFragment extends BaseFragment {
         detailBasePagers.add(new NewsMenuDetailPager(context,news.get(0)));
         detailBasePagers.add(new TopicMenuDetailPager(context));
         detailBasePagers.add(new PhotoMenuDetailPager(context,news.get(2)));
-        detailBasePagers.add(new InteracMenuDetailPager(context));
+        detailBasePagers.add(new InteracMenuDetailPager(context,news.get(2)));
         //把数据存进左侧菜单
         leftMenuFragment.setData(news);
 
@@ -98,5 +98,7 @@ public class NewsFragment extends BaseFragment {
         View rootView = detailBasePager.rootView;
         detailBasePager.initData();
         FlContent.addView(rootView);
+
+
     }
 }

@@ -21,14 +21,19 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
         super(context);
     }
 
+
     @Override
-    public View initView() {
+    public int getLayoutId() {
+        return 0;
+    }
+
+    @Override
+    public void initView() {
         textView = new TextView(mContext);
         textView.setText("专题");
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(Color.YELLOW);
         textView.setTextSize(25);
-        return textView;
     }
 
     @Override

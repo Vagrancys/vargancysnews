@@ -41,6 +41,8 @@ public class PhotoMenuDetailPager extends MenuDetailBasePager {
     ListView listView;
     @BindView(R.id.gridView)
     GridView gridView;
+    @BindView(R.id.photo_menu)
+    ImageView photoMenu;
 
     private NewsDataInfo.News News;
     private String url;
@@ -58,9 +60,29 @@ public class PhotoMenuDetailPager extends MenuDetailBasePager {
         return R.layout.photo_menudetail_pager;
     }
 
+    private boolean isShowListView =true;
     @Override
     public void initView() {
-
+        photoMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isShowListView){
+                    isShowListView = false;
+                    mAdapter = new PhotoMenuDetailPagerAdapter();
+                    gridView.setAdapter(mAdapter);
+                    gridView.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
+                    photoMenu.setImageResource(R.drawable.photo_grid_normal);
+                }else{
+                    isShowListView = true;
+                    mAdapter = new PhotoMenuDetailPagerAdapter();
+                    listView.setAdapter(mAdapter);
+                    gridView.setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
+                    photoMenu.setImageResource(R.drawable.photo_list_normal);
+                }
+            }
+        });
     }
 
     @Override
